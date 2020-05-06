@@ -110,7 +110,7 @@ def parse_file(page, mod_name, url):
 
                                     price += opt2_price
 
-                                if opt2 == 1:
+                                if opt3 == 1:
                                     price += product[3]
 
                                 # create sku

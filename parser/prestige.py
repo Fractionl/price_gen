@@ -20,7 +20,7 @@ def parse_file(page, mod_name, url):
                 search_obj = re.search(r'FUNCTION TOKEN \((.+)\)', line)
                 if search_obj:
                     found_model = False
-                    model_id = search_obj.group(1)
+                    #model_id = search_obj.group(1)
                     model += footer.format(model_id)
 
                     f = js2py.eval_js(model)
@@ -34,6 +34,7 @@ def parse_file(page, mod_name, url):
                     opt1_price = product[2]
                     opt2_price = product[3]
                     opt3_price = product[4]
+                    shipping_price = product[5]
 
                     # SKU = name-widthxproj-motor-lights
 
@@ -47,10 +48,10 @@ def parse_file(page, mod_name, url):
                     add_opt1 = [0, 1]
                     add_opt2 = [0, 1]
                     add_opt3 = [0, 1]
-                    #add_shipping = [0,1,2]
+                    add_shipping = [0,1,2,3,4]
 
                     count = 0
-                    for i in itertools.product(projections, widths, add_fabric, add_opt1, add_opt2, add_opt3):
+                    for i in itertools.product(projections, widths, add_fabric, add_opt1, add_opt2, add_opt3, add_shipping):
 
                         # get variables
                         projection = i[0]
@@ -59,7 +60,7 @@ def parse_file(page, mod_name, url):
                         opt1 = i[3]
                         opt2 = i[4]
                         opt3 = i[5]
-                        #shipping = i[6]
+                        shipping = i[6]
 
                         # rules
                         #if (projection <= width):
@@ -69,10 +70,10 @@ def parse_file(page, mod_name, url):
                                 count += 1
 
                                 # create id
-                                id = '{name}-{width}x{proj}-{fabric}-{opt1}-{opt2}-{opt3}'.format(name=name, width=width,
+                                id = '{name}-{width}x{proj}-{fabric}-{opt1}-{opt2}-{opt3}-{ship}'.format(name=name, width=width,
                                                                                   proj=projection,
                                                                                   fabric=fabric, opt1=opt1,
-                                                                                  opt2=opt2, opt3=opt3)
+                                                                                  opt2=opt2, opt3=opt3, ship=shipping)
 
                                 # get base price
                                 price = 0.0
@@ -99,6 +100,9 @@ def parse_file(page, mod_name, url):
 
                                 if opt3 == 1:
                                     price += opt3_price
+
+                                # add shipping
+                                price += shipping_price[shipping]
 
                                 # create sku
                                 sku = {}

@@ -11,25 +11,26 @@ outputs = ['sh', 'pc']
 dirs = ['../sh-bootstrap/assets/js/', '../patioconcepts/assets/js/']
 urls = ['https://screen-house.com/buy/{0}.json', 'https://patioconcepts.ca/buy/{0}.json']
 pages = [
-    [
-    'buy-1100.js',
-    'buy-1500.js',
-    'buy-2700.js',
-    'buy-3100.js',
-    'buy-3300.js',
-    'buy-3500.js',
-    'buy-3700.js',
-    'buy-4100.js',
-    'buy-4300.js',
-    'buy-4500.js',
-    'buy-4700.js',
-    'buy-5500.js',
-    'buy-5700.js',
-    'buy-athena.js',
-    'buy-europa.js',
-    'buy-slim.js',
-    'buy-nushade.js',
-    'buy-azul.js',
+    ['buy-replacementtops.js',
+     ('screen.html', '../sh-bootstrap/screen-porch-kits/'),
+    # 'buy-1100.js',
+    # 'buy-1500.js',
+    # 'buy-2700.js',
+    # 'buy-3100.js',
+    # 'buy-3300.js',
+    # 'buy-3500.js',
+    # 'buy-3700.js',
+    # 'buy-4100.js',
+    # 'buy-4300.js',
+    # 'buy-4500.js',
+    # 'buy-4700.js',
+    # 'buy-5500.js',
+    # 'buy-5700.js',
+    # 'buy-athena.js',
+    # 'buy-europa.js',
+    # 'buy-slim.js',
+    # 'buy-nushade.js',
+    # 'buy-azul.js',
     'buy-prestige.js',
     'buy-steelcarports.js',
     'buy-polaria.js',
@@ -49,6 +50,7 @@ pages = [
      'buy-europa.js',
      'buy-slim.js',
      'buy-prestige.js',
+     'buy-solarshade.js',
      'buy-softtops.js',
      'buy-enclosures-trailers.js']
 ]
@@ -86,13 +88,26 @@ for i, output in enumerate(outputs):
 
     # open page
     for page in pages[i]:
-        path = dir + page
         logging('----------------------------------------------------------------------------------')
-        logging('Processing page {0}'.format(path))
-        search_obj = re.search(r'buy-(.+)\.js', page)
-        if not search_obj:
-            logging('No parser name can be extracted from the page name. Must be in buy-[parser].js format')
-            exit(1)
+        # detect
+        try:
+            path = dir + page
+
+            logging('Processing page {0}'.format(path))
+            search_obj = re.search(r'buy-(.+)\.js', page)
+            if not search_obj:
+                logging('No parser name can be extracted from the page name. Must be in buy-[parser].js format')
+                exit(1)
+
+        except:
+            path = page[1] + page[0]
+            logging('Path override detected. Using page {0} and path {1}'.format(page[0], page[1]))
+
+            logging('Processing page {0}'.format(path))
+            search_obj = re.search(r'(.+)\..+', page[0])
+            if not search_obj:
+                logging('No parser name can be extracted from the page name {0}'.format(page[0]))
+                exit(1)
 
         mod_name = search_obj.group(1)
 
@@ -109,8 +124,14 @@ for i, output in enumerate(outputs):
         else:
             import_mod_name = mod_name
 
-        module = importlib.import_module('parser.{0}'.format(import_mod_name))
-        parser = getattr(module, 'parse_file')
+        try:
+            module = importlib.import_module('parser.{0}'.format(import_mod_name))
+            parser = getattr(module, 'parse_file')
+
+        except:
+            logging('No parse module can be found with the name {0}'.format(import_mod_name))
+            exit(1)
+
         logging('Importing module {0}'.format(import_mod_name))
 
         sku_list = parser(path, mod_name, url)
