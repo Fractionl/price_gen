@@ -8,7 +8,7 @@ import time
 from zipfile import ZipFile
 
 outputs = ['sh', 'pc']
-dirs = ['../sh-bootstrap/assets/js/', '../patioconcepts/assets/js/']
+dirs = ['../screenhouse/assets/js/', '../patio/assets/js/']
 urls = ['https://screen-house.com/buy/{0}.json', 'https://patioconcepts.ca/buy/{0}.json']
 pages = [
     [
@@ -48,9 +48,9 @@ pages = [
     ['buy-athena.js',
      'buy-europa.js',
      'buy-slim.js',
-     'buy-prestige.js',
      'buy-softtops.js',
-     'buy-enclosures-trailers.js']
+     'buy-enclosures-trailers.js',
+     'buy-prestige.js',]
 ]
 
 def logging(message):

@@ -88,19 +88,19 @@ def parse_file(page, mod_name, url):
                             elif width == 135:
                                 num_panels += 3
                             elif width == 180:
-                                num_panels += 3
-                            elif width == 225:
                                 num_panels += 4
-                            elif width == 270:
+                            elif width == 225:
                                 num_panels += 5
-                            elif width == 315:
+                            elif width == 270:
                                 num_panels += 6
-                            elif width == 360:
+                            elif width == 315:
                                 num_panels += 7
-                            elif width == 405:
+                            elif width == 360:
                                 num_panels += 8
-                            elif width == 444:
+                            elif width == 405:
                                 num_panels += 9
+                            elif width == 444:
+                                num_panels += 10
                             else:
                                 print 'invalid width'.format(width)
                                 sys.exit(1)
